@@ -1,0 +1,195 @@
+<%- contentFor('HeaderCss') %>
+    <link href="../assets/libs/sweetalert2/sweetalert2.min.css" rel="stylesheet" type="text/css" />
+    <%- contentFor('body') %>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="row g-3">
+                            <form class="row g-3" action="/contact/search" method="post">
+                                <div class="col-md-3">
+                                    <div class="search-box">
+                                        <input name="key" type="text" class="form-control search" value="<%= req.query.key ? req.query.key : '' %>" placeholder="Tìm kiếm...">
+                                        <i class="ri-search-line search-icon"></i>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <select class="form-control" name="sortby" id="sortby">
+                                        <option class="text-center" value="0" selected> -- Chọn nhóm khách -- </option>
+                                        <% lists.forEach(i=> {%>
+                                                <option value="<%=i.id%>"<%= parseInt(req.query.sortby) == i.id ? 'selected' :''  %> >
+                                                    <%= i.full_name%>
+                                                </option>
+                                            <%});%>
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <button type="submit" class="btn btn-outline-success btn-border">Tìm kiếm</button>
+                                </div>
+                                <div class="col-md-auto ms-auto">
+                                    <div class="flex-shrink-0">
+                                        <a class="btn btn-success add-btn" data-bs-toggle="offcanvas" data-bs-target="#offcanvas_contacts_add"><i
+                                                class="ri-add-fill me-1 align-bottom"></i>
+                                                Thêm Khách Hàng
+                                        </a>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <%- include('../../partials/alert.ejs') %>
+                            <div>
+                                <div class="table-responsive table-card mb-3">
+                                    <table id="alternative-pagination" class="table nowrap dt-responsive align-middle table-hover">
+                                        <thead class="table-light">
+                                            <tr class="col-lg-12">
+                                                <th class="col-md-2">Tên Khách Hàng</th>
+                                                <th class="col-md-1">Số Điện Thoại</th>
+                                                <th class="col-md-2">Email</th>
+                                                <th class="col-md-1">Ngày Tạo</th>
+                                                <th class="col-md-3">Nhóm Khách Hàng</th>
+                                                <th class="col-md-1" style="text-align: right;">Hành Động</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="list form-check-all">
+                                            <% contacts.rows.forEach(i=> {%>
+                                                <tr>
+                                                    <tr>
+                                                        <td style="font-size: 16px;">
+                                                            <%= i.full_name %>
+                                                        </td>
+                                                        <td>
+                                                            <%= i.mobile %>
+                                                        </td>
+                                                        <td>
+                                                            <%= i.email %>
+                                                        </td>
+                                                        <td>
+                                                            <%= moment(i.created_date).format("DD/MM/YYYY") %>
+                                                        </td>
+                                                        <td>
+                                                            <%i.contactsLists.forEach(j=> {%>
+                                                                <span type="button" id="dropdownMenuLink1" data-bs-toggle="dropdown" aria-expanded="false" class="badge bg-danger list btn-border btn flex-wrap">
+                                                                <%=j.lists.full_name%>
+                                                            </span>
+                                                                <!-- nút sửa list -->
+                                                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink1">
+                                                                    <li><a type="button" data-bs-toggle="offcanvas" class="dropdown-item" href="#offcanvas_edit_list_<%=j.id%>_<%=i.id%>"><span>
+                                                                            <i class="ri-pencil-fill align-bottom me-2 text-muted"></i>
+                                                                        </span>Sửa</a>
+                                                                    </li>
+                                                                    <!-- nút delete list -->
+                                                                    <li><a type="button" data-bs-toggle="modal" id="delete-record" class="dropdown-item" href="#offcanvas_delete_list_<%=j.id%>"><span>
+                                                                            <i class="ri-delete-bin-fill align-bottom me-2 text-muted"></i>
+                                                                        </span>Xóa</a>
+                                                                    </li>
+                                                                </ul>
+                                                                <%});%>
+                                                                    <!-- nút thêm list -->
+                                                                    <!-- &nbsp; -->
+                                                                    <button type="button" class="btn btn-light position-relative p-0 avatar-xs rounded-circle" id="create-btn" data-bs-toggle="offcanvas" href="#offcanvas_add_list_<%=i.id%>">
+                                                                    <span
+                                                                        class="avatar-title bg-transparent text-reset">
+                                                                        <i class="ri-add-line align-bottom me-0"></i>
+                                                                    </span>
+                                                                </button>
+                                                        </td>
+                                                        <td>
+                                                            <ul class="list-inline hstack gap-2 mb-0" style="justify-content: right;">
+                                                                <li class="list-inline-item" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top" title="Chi tiết">
+                                                                    <a class="edit-item-btn" href="#offcanvas_contacts_detail_<%=i.id%>" data-bs-toggle="offcanvas" value="<%=i.id%>">
+                                                                        <i class="ri-eye-fill align-bottom text-muted"></i></a>
+                                                                </li>
+                                                                <li class="list-inline-item" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top" title="Sửa">
+                                                                    <a class="edit-item-btn" href="#offcanvas_contact_update_<%=i.id%>" data-bs-toggle="offcanvas" value="<%= i.id %>">
+                                                                        <i class="ri-pencil-fill align-bottom text-muted"></i></a>
+                                                                </li>
+                                                                <li class="list-inline-item" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top" title="Xóa">
+                                                                    <a class="remove-item-btn" data-bs-toggle="modal" value="" href="#showModal_delete_<%=i.id%>">
+                                                                        <i class="ri-delete-bin-fill align-bottom text-muted"></i>
+                                                                    </a>
+                                                                </li>
+                                                            </ul>
+                                                        </td>
+                                                    </tr>
+                                                </tr>
+                                                <%}); %>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="d-flex justify-content-end mt-3">
+                                    <div class="pagination-wrap hstack gap-2">
+                                        <form action="/contact/search/Previous/<%=req.query.page %>/<%=req.query.key?req.query.key:'none' %>/<%=req.query.sortby?req.query.sortby:'none' %>/ " method="post">
+                                            <button type="submit" class="btn btn-outline-success btn-border" <%=parseInt(req.query.page)===1 ? 'disabled' : '' %> style="padding:4px" >Previous</button>
+                                        </form>
+                                        <% if(paging == ''){%>
+                                            <%='1' %>
+                                                <%}else{%>
+                                                    <%-paging%>
+                                                        <%}%>
+                                                            <form action="/contact/search/Next/<%=req.query.page %>/<%=req.query.key?req.query.key:'none' %>/<%=req.query.sortby?req.query.sortby:'none' %>/ " method="post">
+                                                                <button type="submit" class="btn btn-outline-success btn-border" <%=parseInt(req.query.page)===Math.ceil(contacts.count/size) ? 'disabled' : '' %> 
+                                            <%=Math.ceil(contacts.count/size)===0 ?'disabled' : '' %> 
+                                            style="padding:4px">Next</button>
+                                                            </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- add contact -->
+                            <%- include('_contacts_add'); %>
+                                <%- include('_contacts_api_link'); %>
+                                    <!-- edit contact -->
+                                    <% contacts.rows.forEach(i=> {%>
+                                        <%- include('_contacts_edit', {contact: i}); %>
+                                            <%}); %>
+                                                <!-- delete contact -->
+                                                <% contacts.rows.forEach(i=> {%>
+                                                    <%- include('_contacts_delete', {contact: i}); %>
+                                                        <%}); %>
+                                                            <!-- _contacts_add_list -->
+                                                            <% contacts.rows.forEach(i=> {%>
+                                                                <%- include('_contacts_add_list', {contact: i})%>
+                                                                    <%}); %>
+                                                                        <!-- _contacts_edit_list -->
+                                                                        <% contacts.rows.forEach(i=> {%>
+                                                                            <% i.contactsLists.forEach(j=> {%>
+                                                                                <%- include('_contacts_edit_list',{contactsList: j, contact: i}); %>
+                                                                                    <%}); %>
+                                                                                        <%}); %>
+                                                                                            <!-- _contacts_delete_list -->
+                                                                                            <% contacts.rows.forEach(i=> {%>
+                                                                                                <% i.contactsLists.forEach(j=> {%>
+                                                                                                    <%- include('_contacts_delete_list',{contactsList:j}); %>
+                                                                                                        <%}); %>
+                                                                                                            <%}); %>
+                                                                                                                <!-- _contacts_add_company -->
+                                                                                                                <% contacts.rows.forEach(i=> {%>
+                                                                                                                    <%- include('_contacts_add_company',{contact:i}); %>
+                                                                                                                        <%}); %>
+                                                                                                                            <!-- _contacts_edit_company -->
+                                                                                                                            <% contacts.rows.forEach(i=>{%>
+                                                                                                                                <% i.contactCompanies.forEach(j=> {%>
+                                                                                                                                    <%- include('_contacts_edit_company',{contact:i, contactCompany:j}); %>
+                                                                                                                                        <%});%>
+                                                                                                                                            <%}); %>
+                                                                                                                                                <!-- _contacts_delete_company -->
+                                                                                                                                                <% contacts.rows.forEach(i=>{%>
+                                                                                                                                                    <% i.contactCompanies.forEach(j=> {%>
+                                                                                                                                                        <%- include('_contacts_delete_company',{contactCompany:j}); %>
+                                                                                                                                                            <%});%>
+                                                                                                                                                                <%}); %>
+                                                                                                                                                                    <!-- Thông tin chi tiết-->
+                                                                                                                                                                    <% contacts.rows.forEach(i=>{%>
+                                                                                                                                                                        <%- include('_contacts_detail', {contact:i}); %>
+                                                                                                                                                                            <%});%>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <%- contentFor('FooterJs') %>
+            <script src="../../assets/libs/sweetalert2/sweetalert2.min.js"></script>
+            <script src="../../assets/libs/list.js/list.min.js"></script>
+            <script src="../../assets/libs/list.pagination.js/list.pagination.min.js"></script>
+            <script src="../../assets/js/pages/crm-contact.init.js"></script>

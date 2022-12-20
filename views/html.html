@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JQuery</title>    <script src="/js/baitap.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+<style>
+    table {
+        font-family: arial, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    td, th {
+        border: 2px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+    }
+
+    tr:nth-child(even) {
+        background-color: #dddddd;
+    }
+    .container{
+        margin-top: 10px;
+    }
+    .left {
+        float: left;
+    }
+    .right{
+        float: left;
+    }
+    .select{
+        margin: 10px 0 20px 0;
+    }
+    .note{
+        margin-top: 10px;
+    }
+    label{
+        margin: 10px;
+    }
+    input{
+        width: 100px;
+        text-align: center;
+    }
+    .form-select{
+        text-align: center;
+        border: 2px solid #343434;
+        width: 100%;
+        height: 40px;
+    }
+
+</style>
+<body>
+<div class="container">
+    <div class="col-12">
+
+        <div class="left col-8">
+            <div class="select">
+                <select class="form-select" aria-label="Default select example">
+                    <option selected disabled default>---Chọn---</option>
+                </select>
+            </div>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">Tên món</th>
+                    <th scope="col">Giá</th>
+                    <th scope="col">Số lượng</th>
+                    <th scope="col">Danh mục</th>
+                    <th scope="col">Thành tiền</th>
+                    <th scope="col">Xóa</th>
+                </tr>
+                </thead>
+                <tbody class="tab">
+
+                </tbody>
+            </table>
+        </div>
+        <div class="right col-4">
+            <div class="note">
+                <div>
+                    <p class="sum">Tổng tiền: <span class="sum-span"></span></p>
+                    <div>Giảm giá <input min="0"  type="text" class="input-discount" value="0"><select id="select-discount" >
+                        <option data-vnd="1" value="vnd" selected>VNĐ</option>
+                        <option data-vnd="2"  value="%">%</option>
+                    </select></div>
+                    <input type="checkbox" class="input-vat">VAT + 10%</input>
+                    <p>Thanh toán: <span class="total"></span></p>
+                </div>
+            </div>
+
+        </div>
+
+
+    </div>
+</div>
+<script>
+
+    var dishAdded =
+        getCookie("dishAdded") !== "" ? JSON.parse(getCookie("dishAdded")) : [];
+    var orderDish = [];
+    const dropDown = $(".form-select");
+    const table = $(".tab");
+    const VAT = 10;
+    const dishes = [
+        {
+            id: 1,
+            title: "Thịt",
+            category: "Thực phẩm",
+            price: 50000,
+        },
+        {
+            id: 2,
+            title: "Củ",
+            category: "Rau củ",
+            price: 10000,
+        },
+        {
+            id: 3,
+            title: "Cá",
+            category: "Thực phẩm",
+            price: 20000,
+        },
+        {
+            id: 4,
+            title: "Gà",
+            category: "Thực phẩm",
+            price: 15000,
+        },
+        {
+            id: 5,
+            title: "Rau",
+            category: "Rau củ",
+            price: 5000,
+        },
+    ];
+    $(document).ready(function(){
+        $("input").keypress(function(){
+            $(this).val(i+=1);
+        });
+    });
+    function numberFormat1(number) {
+        const formatter = new Intl.NumberFormat("en");
+        if (number === "") return 0;
+        number = number.replace(/[^0-9]+$/g, ' ');
+        if (number === "") return 0;
+        if (number >= 999) return 999;
+        if (number == 1000) return 999;
+        if (number == null) return 0;
+        if (number <= 0) return 0;
+        const n = parseInt(number);
+        number = formatter.format(n);
+        return number;
+    }
+
+    function phanTram() {
+        $("#select-discount").on("change", function () {
+            console.log(Number($(".input-discount").val().replaceAll(",", "")));
+            console.log($(this).val() === "%");
+            console.log(Number($(".input-discount").val().replaceAll(",", "")) > 100);
+            if ($(this).val() === "%") {
+                $(".input-discount").attr("maxlength", "3");
+            }
+            if ($(this).val() === "vnd") {
+                $(".input-discount").removeAttr("maxlength");
+            }
+            if (
+                $(this).val() === "%" &&
+                Number($(".input-discount").val().replaceAll(",", "")) > 100
+            ) {
+                $(".input-discount").attr("maxlength", "3");
+                $(".input-discount").val("100");
+            }
+            sumPrice();
+            phanTram();
+        });
+    }
+
+    $(function () {
+        const formatter = new Intl.NumberFormat("en");
+        $("#salary").on("input", function () {
+            $(this).val(numberFormat($(this).val()));
+        });
+
+        //Doi gia khi thay doi so luong
+        $(document).on("input", ".input-quaty", function () {
+            $(this).val(numberFormat1($(this).val()));
+            $(this)
+                .parents("tr")
+                .children(".price")
+                .text(format($(this).val().replaceAll(",", "") * $(this).attr("price")));
+            sumPrice();
+            switch ($('#select-discount option:selected').data('vnd')) {
+                case 1 :
+                    console.log('vnd')
+                    phanTram();
+                    $('.input-discount').val('0');
+                    sumPrice();
+                    break;
+                case 2:
+                    console.log('%')
+                    phanTram();
+                    sumPrice();
+                    break;
+            }
+            phanTram();
+            sumPrice();
+
+            const thisTitle = $(this).parents("tr").find(".name").text();
+            const index = dishAdded.findIndex((x) => x.title === thisTitle);
+            dishAdded[index].quaty = Number($(this).val());
+            setCookie("dishAdded", JSON.stringify(dishAdded));
+            // sumPrice();
+        });
+
+        //Xoa
+        $(document).on("click", ".delete-btn", function () {
+            const filter = dishAdded.filter(
+                (x) => x.title === $(this).parents("tr").find(".name").text()
+            );
+            const index = dishAdded.indexOf(filter[0]);
+            if (index > -1) {
+                dishAdded.splice(index, 1);
+            }
+            $(this).parents("tr").remove();
+            switch ($('#select-discount option:selected').data('vnd')) {
+                case 1 :
+                    console.log('vnd')
+                    phanTram();
+                    sumPrice();
+                    // let a = $('.sum-span').text();
+                    // console.log(numberFormat(a));
+                    $('.input-discount').val('0');
+                    break;
+                case 2:
+                    console.log('%')
+                    phanTram();
+                    sumPrice();
+
+                    break;
+            }
+            console.log('76656')
+            // sumPrice();
+            // let a = $('.sum-span').text();
+            // console.log(numberFormat(a));
+            // $('.input-discount').val(a);
+            setCookie("dishAdded", JSON.stringify(dishAdded));
+            sumPrice();
+        });
+
+
+        //Thay doi select
+        $(document).on("change", ".form-select", function () {
+            var optionSelected = $(this).find("option:selected");
+            addDish(optionSelected.val());
+
+            sumPrice();
+            $(`.form-select option[default]`).prop("selected", true);
+        });
+
+        //Change input discount giảm giá
+        $(".input-discount").on("input", function () {
+            $(this).val(numberFormat($(this).val()));
+            if ($("#select-discount").val() === "%" && $(this).val() > 100) {
+                $(this).attr("maxlength", "3");
+                $(this).val("100");
+            }if (
+                $("#select-discount").val() === "vnd" &&
+                Number($(this).val().replaceAll(",", "")) >
+                $(".sum-span").text().replaceAll(",", "")
+            ) {
+                $(this).val(format($(".sum-span").text().replaceAll(",", "")));
+                $(this).removeAttr("maxlength");
+            }
+
+            sumPrice();
+        });
+
+        //Change select discount
+        phanTram();
+
+        //check VAT
+        $(".input-vat").on("input", function () {
+            sumPrice();
+        });
+        dropDown.append(htmlDish);
+        sumPrice();
+    });
+    sumPrice();
+    //Creat option
+    const htmlDish = dishes.map(
+        (dish) => `<option value="${dish.title}">${dish.title}</option>`
+    );
+
+    function addDish(title) {
+        const dishAdd = dishes.filter((dish) => dish.title === title);
+        const a = { ...dishAdd[0] };
+        const htmlTable = `
+    <tr>
+     <td class="name" dish="${a.title}">${a.title}</td>
+      <td>${format(a.price)}</td>
+      <td>
+           <div class="buttons_added">
+               <input class="input-quaty" type="text" value="1"  price=${
+            a.price
+        }>
+         </div></td>
+        <td class="category" dish="${a.category}">${a.category}</td>
+      <td class="price">${format(a.price)}</td>
+      <td class="delete-btn">Xóa</td>
+    </tr>
+    `;
+        if (!$(".name").length) {
+            table.append(htmlTable);
+            dishAdded.push({
+                title: a.title,
+                price: a.price,
+                category: a.category,
+                quaty: Number(
+                    $(`.name[dish='${title}']`).parents("tr").find(".input-quaty").val()
+                ),
+            });
+            setCookie("dishAdded", JSON.stringify(dishAdded));
+        } else {
+            let isSame = false;
+            $(".name").each(function () {
+                if ($(this).text() === title) {
+                    isSame = true;
+                }
+            });
+            if (isSame) {
+                $(`.name[dish='${title}']`)
+                    .parents("tr")
+                    .find(".input-quaty")
+                    .val(
+                        Number(
+                            $(`.name[dish='${title}']`).parents("tr").find(".input-quaty").val()
+                        ) + 1
+                    );
+                $(`.name[dish='${title}']`)
+                    .parents("tr")
+                    .children(".price")
+                    .text(
+                        format(
+                            Number(
+                                $(`.name[dish='${title}']`)
+                                    .parents("tr")
+                                    .find(".input-quaty")
+                                    .val()
+                            ) *
+                            $(`.name[dish='${title}']`)
+                                .parents("tr")
+                                .find(".input-quaty")
+                                .attr("price")
+                        )
+                    );
+                const index = dishAdded.findIndex((x) => x.title === a.title);
+                dishAdded[index].quaty = Number($(".input-quaty").val());
+                setCookie("dishAdded", JSON.stringify(dishAdded));
+            } else {
+                table.append(htmlTable);
+                dishAdded.push({
+                    title: a.title,
+                    price: a.price,
+                    category: a.category,
+                    quaty: Number(
+                        $(`.name[dish='${title}']`).parents("tr").find(".input-quaty").val()
+                    ),
+                });
+                setCookie("dishAdded", JSON.stringify(dishAdded));
+            }
+        }
+    }
+
+    function sumPrice() {
+        let a = 0;
+        let total = 0;
+        const prices = $(".price");
+        prices.each(function () {
+            a += parseInt($(this).text().replaceAll(",", ""));
+        });
+        $(".sum-span").text(format(a));
+        total += a;
+        function discountPrice() {
+            if ($("#select-discount").val() === "vnd") {
+                return parseInt($(".input-discount").val().replaceAll(",", ""));
+            } else {
+                return (
+                    (total * parseInt($(".input-discount").val().replaceAll(",", ""))) / 100
+                );
+            }
+        }
+        discountPrice();
+        if ($(".input-vat").is(":not(:checked)")) {
+            if ($(".input-discount").val() === "") {
+                $(".total").text(format(total));
+            } else {
+                $(".total").text(format(total - discountPrice()));
+            }
+        }else if($(".input-vat").is(":checked")){
+            if ($(".input-discount").val() === "") {
+                $(".total").text(format(total - total * 10 / 100));
+            } else {
+                // $(".total").text(format((total - discountPrice()) + ((total - discountPrice()) * 10 / 100)));
+                $(".total").text(format((total - discountPrice()) + (total - discountPrice())* 10 / 100));
+            }
+        }
+
+    }
+
+    function setCookie(cname, cvalue) {
+        document.cookie = cname + "=" + cvalue + ";" + ";path=/";
+    }
+
+    function getCookie(cname) {
+        var name = cname + "=";
+        var ca = document.cookie.split(";");
+        for (var i = 0; i < ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0) == " ") c = c.substring(1);
+            if (c.indexOf(name) == 0) return c.substring(name.length, c.length);
+        }
+        return "";
+    }
+    if (getCookie("dishAdded") !== "") {
+        const dishCookie = JSON.parse(getCookie("dishAdded"));
+        const a = dishCookie.map((x) => {
+            const html = `<tr>
+       <td class="name" dish="${x.title}">${x.title}</td>
+        <td>${format(x.price)}</td>
+        <td>
+             <div class="buttons_added">
+                 <input class="input-quaty" type="text" value="${
+                x.quaty
+            }" price=${x.price}>
+           </div></td>
+        <td class="category" dish="${x.category}">${x.category}</td>
+        <td class="price">${format(x.price * x.quaty)}</td>
+        <td class="delete-btn">Xóa</td>
+      </tr>`;
+            table.append(html);
+        });
+    }
+    sumPrice();
+
+    function numberFormat(number) {
+        const formatter = new Intl.NumberFormat("en");
+        if (number === "") return 0;
+        number = number.replace(/[^0-9]/g, "").replace(/(\..*)\./g, "$1");
+        if (number === "") return;
+        if (number == null) return 0;
+        const n = parseInt(number);
+        number = formatter.format(n);
+        return number;
+    }
+
+
+    function format(number) {
+        const formatter = new Intl.NumberFormat("en");
+
+        return formatter.format(number);
+    }
+
+
+</script>
+
+
+</body>
+</html>
+

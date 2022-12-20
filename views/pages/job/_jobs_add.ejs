@@ -1,0 +1,27 @@
+<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvas_jobs_add" aria-labelledby="offcanvas_jobs_add">
+    <div class="offcanvas-header border-bottom">
+        <h5 class="offcanvas-title text-muted text-uppercase" id="offcanvas_jobs_add">Thêm Ngành Nghề</h5>
+    </div>
+    <form action="/job/list" method="post">
+        <div class="offcanvas-body p-0 overflow-hidden">
+            <div data-simplebar style="height: calc(100vh - 150px);">
+                <div class="acitivity-timeline p-4">
+                    <div class="row g-3">
+                        <div class="col-lg-12">
+                            <div>
+                                <label for="title" class="form-label">Tên Ngành Nghề</label>
+                                <input type="text" id="title" name="title" class="form-control" placeholder="Nhập nghành nghề" required />
+                            </div>
+                        </div>
+                        <!--==============radio===============-->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <div class="hstack gap-2 justify-content-end">
+                <button type="submit" class="btn btn-success" id="add-btn">Thêm</button>
+            </div>
+        </div>
+    </form>
+</div>

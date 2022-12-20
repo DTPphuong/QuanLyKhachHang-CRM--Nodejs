@@ -1,0 +1,216 @@
+<%- contentFor('HeaderCss') %>
+    <link href="../../assets/libs/sweetalert2/sweetalert2.min.css" rel="stylesheet" type="text/css"/>
+    <%- contentFor('body') %>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card" id="leadsList">
+                    <div class="card-header">
+                        <div class="row g-3">
+                            <form class="row g-3" action="/company/search" method="post">
+                                <div class="col-md-4">
+                                    <div class="search-box">
+                                        <input name="key" type="text" class="form-control"
+                                            value="<%= req.query.key ? req.query.key : '' %>" placeholder="Tìm kiếm...">
+                                        <i class="ri-search-line search-icon"></i>
+                                    </div>
+                                </div>
+                                <div class="col-sm-2" style="padding-left:0 ;">
+                                    <button type="submit" class="btn btn-outline-success btn-border"
+                                        value="<%= req.query.key ? req.query.key : '' %>">Tìm kiếm</button>
+                                </div>
+                                <div class="col-md-auto ms-auto">
+                                    <div class="flex-shrink-0">
+                                        <a class="btn btn-success add-btn" type="button" data-bs-toggle="offcanvas"
+                                            id="create-btn" data-bs-target="#offcanvas_company_add"
+                                            aria-controls="offcanvas_company_add">
+                                            <i class="ri-add-line align-bottom me-1"></i>Thêm Doanh Nghiệp</a>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div>
+                            <%- include('../../partials/alert.ejs') %>
+                                <div class="table-responsive table-card">
+                                    <table class="table nowrap dt-responsive align-middle table-hover" id="customerTable">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th class="col-sm-3" style="font-size: 16px;">Doanh Nghiệp</th>
+                                                <th class="col-sm-1">Mã Số Thuế</th>
+                                                <th class="col-sm-1">Số Điện Thoại</th>
+                                                <th class="col-sm-2">Email</th>
+                                                <th class="col-sm-2">Địa Chỉ</th>
+                                                <th class="col-sm-2">Ngành Nghề</th>
+                                                <th class="col-sm-1" style="text-align: right;">Hành Động</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="list form-check-all">
+                                            <% companys.rows.forEach(i=>{%>
+                                                <tr>
+                                                    <td style="font-size: 15px;">
+                                                        <%= i.full_name %>
+                                                    </td>
+                                                    <td>
+                                                        <%= i.tax %>
+                                                    </td>
+                                                    <td>
+                                                        <%= i.mobile %>
+                                                    </td>
+                                                    <td>
+                                                        <%= i.email %>
+                                                    </td>
+                                                    <td>
+                                                        <%= i.address %>
+                                                    </td>
+                                                    <td>
+                                                        <%i.companyJobs.forEach(j=> {%>
+                                                            <span type="button" id="dropdownMenuLink1"
+                                                                data-bs-toggle="dropdown" aria-expanded="false"
+                                                                class="badge badge-outline-dark jobs btn-border btn flex-wrap">
+                                                                <%=j.jobs.full_name%>
+                                                            </span>
+                                                            <!-- nút sửa job_company -->
+                                                            <ul class="dropdown-menu"
+                                                                aria-labelledby="dropdownMenuLink1">
+                                                                <li><a type="button" data-bs-toggle="offcanvas"
+                                                                        class="dropdown-item"
+                                                                        href="#offcanvas_edit_companyJob_<%=i.id%>_<%=j.id%>"><span>
+                                                                            <i class="ri-pencil-fill align-bottom me-2 text-muted"></i>
+                                                                        </span>Sửa</a>
+                                                                </li>
+                                                            <!-- nút delete job_company -->
+                                                                <li><a type="button" data-bs-toggle="modal"
+                                                                        id="delete-record" class="dropdown-item"
+                                                                        href="#offcanvas_delete_companyJob_<%=j.id%>"><span>
+                                                                            <i class="ri-delete-bin-fill align-bottom me-2 text-muted"></i>
+                                                                        </span>Xóa</a>
+                                                                </li>
+                                                            </ul>
+                                                            <%});%>
+                                                                <!-- nút thêm job_company -->
+                                                                <button type="button"
+                                                                    class="btn btn-light position-relative p-0 avatar-xs rounded-circle"
+                                                                    id="create-btn" data-bs-toggle="offcanvas"
+                                                                    href="#offcanvas_add_companyJob_<%=i.id%>">
+                                                                    <span
+                                                                        class="avatar-title bg-transparent text-reset">
+                                                                        <i class="ri-add-line align-bottom me-0"></i>
+                                                                    </span>
+                                                                </button>
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <ul class="list-inline hstack gap-2 mb-0 text-end"
+                                                            style="justify-content: flex-end;">
+                                                            <li class="list-inline-item" data-bs-toggle="tooltip"
+                                                                data-bs-trigger="hover" data-bs-placement="top"
+                                                                title="Chi tiết">
+                                                                <a class="edit-item-btn"
+                                                                    href="#offcanvas_company_detail_<%=i.id%>"
+                                                                    data-bs-toggle="offcanvas" value="<%=i.id%>">
+                                                                    <i class="ri-eye-fill align-bottom text-muted"></i></a>
+                                                            </li>
+                                                            <li class="list-inline-item" data-bs-toggle="tooltip"
+                                                                data-bs-trigger="hover" data-bs-placement="top"
+                                                                title="Sửa">
+                                                                <a class="edit-item-btn"
+                                                                    href="#offcanvas_company_edit_<%=i.id%>"
+                                                                    data-bs-toggle="offcanvas" title="Sửa" value="<%= i.id %>">
+                                                                    <i class="ri-pencil-fill align-bottom text-muted"></i></a>
+                                                            </li>
+                                                            <li class=" list-inline-item" data-bs-toggle="tooltip"
+                                                                data-bs-trigger="hover" data-bs-placement="top"
+                                                                title="Xóa">
+                                                                <a class=" remove-item-btn"
+                                                                    href="#offcanvas_company_delect_<%=i.id%>"
+                                                                    data-bs-toggle="modal" value="<%= i.id %>">
+                                                                    <i class="ri-delete-bin-fill align-bottom text-muted"></i>
+                                                                </a>
+                                                            </li>
+                                                        </ul>
+                                                    </td>
+                                                </tr>
+                                            <%}); %>
+                                        </tbody>
+                                    </table>
+                                </div>
+                        </div>
+                        <div class="d-flex justify-content-end mt-3">
+                            <div class="pagination-wrap hstack gap-2">
+                                <form
+                                    action="/company/search/Previous/<%=req.query.page %>/<%=req.query.key %> " method="post">
+                                    <button type="submit" class="btn btn-outline-success btn-border"
+                                        <%=parseInt(req.query.page)===1 ? 'disabled' : '' %> style="padding:4px" >Previous</button>
+                                </form>
+                                    <% if(paging == ''){%>
+                                    <%='1' %> 
+                                    <%}else{%>
+                                    <%-paging%> 
+                                    <%}%>
+                                <form
+                                    action="/company/search/Next/<%=req.query.page %>/<%=req.query.key %> " method="post">
+                                    <button type="submit" class="btn btn-outline-success btn-border"
+                                        <%=parseInt(req.query.page)===Math.ceil(companys.count/size)
+                                        ? 'disabled' : '' %> 
+                                        <%=Math.ceil(companys.count/size)===0
+                                        ? 'disabled' : '' %> style="padding:4px"
+                                        >Next</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- company_add -->
+                    <%- include('_company_add') %>
+                    <!-- company edit -->
+                    <% companys.rows.forEach(i=> {%>
+                        <%- include('_company_edit', {company: i}) %>
+                            <%}) %>
+                    <!-- company delete -->
+                    <% companys.rows.forEach(i=> {%>
+                        <%- include('_company_delete', {company: i}) %>
+                            <%}) %>
+                    <!-- company add companyJob -->
+                    <% companys.rows.forEach(i=> {%>
+                        <%- include('_company_add_companyJob', {company: i}) %>
+                        <%}); %>
+                    <!-- company edit companyJob -->
+                    <% companys.rows.forEach(i=> {%>
+                        <% i.companyJobs.forEach(j=> {%>
+                        <%- include('_company_edit_companyJob', {company: i, companyJob: j}) %>
+                            <%}); %>
+                        <%}); %>
+                    <!-- company delete -->
+                    <% companys.rows.forEach(i=> {%>
+                        <% i.companyJobs.forEach(j=> {%>
+                        <%- include('_company_delete_companyJob', {companyJob: j}) %>
+                            <%}); %>
+                        <%}); %>
+                    <!-- contact_add -->
+                    <% companys.rows.forEach(i=>{%>
+                        <%- include('_company_add_contact',{company: i}); %>
+                    <%});%>
+                    <!-- editcontact -->
+                    <% companys.rows.forEach(i=> {%>
+                        <% i.contact_company.forEach(j=> {%>
+                        <%- include('_company_edit_contact', {company: i, contactCompany: j}) %>
+                            <%}); %>
+                        <%}); %>
+                    <!-- delete contact-->
+                    <% companys.rows.forEach(i=> {%>
+                        <% i.contact_company.forEach(j=> {%>
+                        <%- include('_company_delete_contact', {contactCompany: j}) %>
+                            <%}); %>
+                        <%}); %>
+                        <!-- Thông tin chi tiết-->
+                    <% companys.rows.forEach(i=> {%>
+                        <%- include('_company_detail',{company: i}); %>
+                    <%}); %>
+                </div>
+            </div>
+        </div>
+        </div>
+        <%- contentFor('FooterJs') %>
+            <script src="../../assets/libs/sweetalert2/sweetalert2.min.js"></script>
+            <script src="../../assets/libs/list.js/list.min.js"></script>
+            <script src="../../assets/libs/list.pagination.js/list.pagination.min.js"></script>
+            <script src="../../assets/js/pages/crm-leads.init.js"></script>

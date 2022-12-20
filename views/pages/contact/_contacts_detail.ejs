@@ -1,0 +1,122 @@
+<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvas_contacts_detail_<%=contact.id%>" style="width: 600px;"
+    aria-labelledby="offcanvasRightLabel">
+    <div class="offcanvas-header border-bottom">
+        <h5 class="offcanvas-title text-muted text-uppercase" id="offcanvasRightLabel"> Thông Tin Chi Tiết Khách Hàng
+        </h5>
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body p-0 overflow-hidden">
+        <div data-simplebar style="height: calc(100vh - 150px);">
+            <div class="acitivity-timeline p-4">
+                <div class="table-responsive table-card">
+                    <div class="text-center">
+                        <h5 class="mt-2 mb-2">
+                            <%= contact.full_name %>
+                        </h5>
+                    </div>
+                    <table class="table table-borderless">
+                        <tbody>
+                            <tr>
+                                <td class="fw-medium">Số Điện Thoại:</td>
+                                <td>
+                                    <%= contact.mobile %>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="fw-medium">Email:</td>
+                                <td>
+                                    <%= contact.email %>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="fw-medium">Ngày Tạo:</td>
+                                <td>
+                                    <%= moment(contact.created_date).format("DD/MM/YYYY | hh:mm") %>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="fw-medium">---------------------</td>
+                            </tr>
+                            <tr>
+                                <td class="fw-medium">Nhóm Khách Hàng:</td>
+                                <td>
+                                    <%contact.contactsLists.forEach(i=> {%>
+                                        <span type="button" id="dropdownMenuLink1" data-bs-toggle="dropdown"
+                                            aria-expanded="false" class="badge bg-danger list btn-border btn flex-wrap"
+                                            style="font-size: 13px; margin: 1px 1px; padding: 8px;">
+                                            <%=i.lists.full_name%>
+                                        </span>
+                                        <!-- nút sửa list -->
+                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink1">
+                                            <li><a type="button" data-bs-toggle="offcanvas" class="dropdown-item"
+                                                    href="#offcanvas_edit_list_<%=i.id%>_<%=contact.id%>"><span>
+                                                        <i class="ri-pencil-fill align-bottom me-2 text-muted"></i>
+                                                    </span>Sửa</a>
+                                            </li>
+                                            <!-- nút delete list -->
+                                            <li><a type="button" data-bs-toggle="modal" id="delete-record"
+                                                    class="dropdown-item"
+                                                    href="#offcanvas_delete_list_<%=i.id%>"><span>
+                                                        <i class="ri-delete-bin-fill align-bottom me-2 text-muted"></i>
+                                                    </span>Xóa</a>
+                                            </li>
+                                        </ul>
+                                        <%});%>
+                                            <!-- nút thêm list -->
+                                            <button type="button"
+                                                class="btn btn-light position-relative p-0 avatar-xs rounded-circle"
+                                                id="create-btn" data-bs-toggle="offcanvas"
+                                                href="#offcanvas_add_list_<%=contact.id%>">
+                                                <span class="avatar-title bg-transparent text-reset">
+                                                    <i class="ri-add-line align-bottom me-0"></i>
+                                                </span>
+                                            </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="fw-medium">---------------------</td>
+                            </tr>
+                            <tr>
+                                <td class="fw-medium">Doanh Nghiệp:</td>
+                                <td>
+                                    <% contact.contactCompanies.forEach(i=> {%>
+                                        <span type="text" id="dropdownMenuLink1" data-bs-toggle="dropdown"
+                                            aria-expanded="false" class="company btn-border btn flex-wrap" 
+                                            style="font-size: 13px;border: 0.1px solid rgb(206, 201, 201);
+                                            margin: 1px 2px; padding: 8px;">
+                                            <%= i.comp.full_name %>
+                                        </span>
+                                        <!-- nút sửa comnany -->
+                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink1">
+                                            <li><a type="button" data-bs-toggle="offcanvas" class="dropdown-item"
+                                                    href="#offcanvas_edit_company_<%=contact.id%>_<%=i.id%>"><span>
+                                                        <i class="ri-pencil-fill align-bottom me-2 text-muted"></i>
+                                                    </span>Sửa</a>
+                                            </li>
+                                            <!-- nút delete comnany -->
+                                            <li><a type="button" data-bs-toggle="modal" id="delete-record"
+                                                    class="dropdown-item"
+                                                    href="#offcanvas_delete_company_<%=i.id%>"><span>
+                                                        <i class="ri-delete-bin-fill align-bottom me-2 text-muted"></i>
+                                                    </span>Xóa</a>
+                                            </li>
+                                        </ul>
+                                        <%});%>
+                                            <!-- nút thêm comnany -->
+                                            <button type="button"
+                                                class="btn btn-light position-relative p-0 avatar-xs rounded-circle"
+                                                id="create-btn" data-bs-toggle="offcanvas"
+                                                href="#offcanvas_add_company_<%=contact.id%>">
+                                                <span class="avatar-title bg-transparent text-reset">
+                                                    <i class="ri-add-line align-bottom me-0"></i>
+                                                </span>
+                                            </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

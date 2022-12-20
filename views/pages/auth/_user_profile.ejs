@@ -1,0 +1,239 @@
+<%- contentFor('HeaderCss') %>
+    <style>
+        .bodyHover {
+            background: linear-gradient(to bottom, var(--mainColor) 0%, var(--mainColor) 100%);
+            background-position: 0 100%;
+            background-repeat: repeat-x;
+            background-size: 3px 3px;
+            color: #000;
+            text-decoration: none;
+        }
+        
+        .bodyHover:hover {
+            background-image: url("data:image/svg+xml;charset=utf8,%3Csvg id='squiggle-link' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns:ev='http://www.w3.org/2001/xml-events' viewBox='0 0 20 4'%3E%3Cstyle type='text/css'%3E.squiggle{animation:shift .3s linear infinite;}@keyframes shift {from {transform:translateX(0);}to {transform:translateX(-20px);}}%3C/style%3E%3Cpath fill='none' stroke='%23ff9800' stroke-width='2' class='squiggle' d='M0,3.5 c 5,0,5,-3,10,-3 s 5,3,10,3 c 5,0,5,-3,10,-3 s 5,3,10,3'/%3E%3C/svg%3E");
+            background-position: 0 100%;
+            background-size: auto 6px;
+            background-repeat: repeat-x;
+            text-decoration: none;
+        }
+    </style>
+    <%- contentFor('body') %>
+
+        <div class="position-relative mx-n4 mt-n4">
+            <div class="profile-wid-bg profile-setting-img">
+                <img src="../../assets/images/profile-bg.jpg" class="profile-wid-img" alt="">
+
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xxl-3">
+                <div class="card mt-n5">
+                    <div class="card-body p-4 bodyHover">
+                        <div class="text-center">
+                            <!-- hàm submit input qua thuộc tính onchange dòng 45-->
+                            <script>
+                                function submit_img() {
+                                    document.getElementById("submit_image").submit()
+                                }
+                            </script>
+                            <form action="/auth/upload-profile-pic" enctype="multipart/form-data" method="POST" id="submit_image">
+                                <div class="profile-user position-relative d-inline-block mx-auto mb-4 ">
+                                    <img src="./../../../upload/<%=req.session.imgUser%> " class=" rounded-circle avatar-xl img-thumbnail user-profile-image" alt="user-profile-image">
+                                    <div class="avatar-xs p-0 rounded-circle profile-photo-edit">
+                                        <!-- input type= file và submit qua script -->
+                                        <input id="profile-img-file-input" type="file" name="profile_pic" class="profile-img-file-input" onchange='submit_img()'>
+                                        <label for="profile-img-file-input" class="profile-photo-edit avatar-xs">
+                                        <span type="submit" class="avatar-title rounded-circle bg-light text-body">
+                                            <i class="ri-camera-fill"></i>
+                                        </span>
+                                    </label>
+                                    </div>
+                                    <!-- <div>
+                                        <button class="btn-save" type="submit">Save files</button>
+                                    </div> -->
+                                </div>
+                            </form>
+
+                            <h5 class="fs-17 mb-1">
+                                <%= req.user.full_name %>
+                            </h5>
+                            <p class="text-muted mb-0">
+                                <%= req.user.role %>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <!--end card-->
+
+
+                <!--end card-->
+            </div>
+            <!--end col-->
+            <div class="col-xxl-9">
+                <div class="card mt-xxl-n5">
+                    <div class="card-header">
+                        <ul class="nav nav-tabs-custom user-profile-nav-tabs rounded card-header-tabs border-bottom-0" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link <%= req.query.tab ? '' : 'active' %> " href="/auth/user_profile">
+                                    <i class="fas fa-home"></i> Thông Tin Tài Khoản
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link <%= req.query.tab && req.query.tab==='password' ? 'active' : '' %>" href="/auth/user_profile?tab=password">
+                                    <i class="far fa-user"></i> Đổi Mật Khẩu
+                                </a>
+                            </li>
+
+
+                        </ul>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="tab-content">
+                            <div class="tab-pane <%= req.query.tab ? '' : 'active' %>" id="personalDetails" role="tabpanel">
+                                <%- include('../../partials/alert.ejs') %>
+                                    <form action="/auth/user_profile" method="post">
+                                        <div class="row">
+                                            <div class="col-lg-6">
+                                                <div class="mb-3">
+                                                    <label for="firstnameInput" class="form-label">Họ và Tên</label>
+                                                    <input type="text" name="fullName" class="form-control" id="firstnameInput" placeholder="Họ và Tên" value="<%= req.user.full_name %>" required>
+                                                </div>
+                                            </div>
+
+                                            <!--end col-->
+                                            <div class="col-lg-6">
+                                                <div class="mb-3">
+                                                    <label for="JoiningdatInput" class="form-label">Ngày Tạo</label>
+                                                    <input type="text" class="form-control" placeholder="<%= moment(req.user.created_date).format(" DD/MM/YYYY ")
+                                                    %>" disabled/>
+                                                </div>
+                                            </div>
+
+                                            <!--end col-->
+                                            <div class="col-lg-6">
+                                                <div class="mb-3">
+                                                    <label for="phonenumberInput" class="form-label">Số Điện Thoại</label>
+                                                    <input type="number" name="mobile" class="form-control" id="phonenumberInput" placeholder="Số Điện Thoại" value="<%= req.user.mobile %>" required>
+                                                </div>
+                                            </div>
+                                            <!--end col-->
+                                            <div class="col-lg-6">
+                                                <div class="mb-3">
+                                                    <label for="designationInput" class="form-label">Chức Vụ</label>
+                                                    <input type="text" class="form-control" id="designationInput" placeholder="Designation" value="<%= req.user.role %>" disabled>
+                                                </div>
+                                            </div>
+                                            <!--end col-->
+                                            <div class="col-lg-6">
+                                                <div class="mb-3">
+                                                    <label for="emailInput" class="form-label">Email
+                                                </label>
+                                                    <input type="email" name="email" class="form-control" id="emailInput" placeholder="Email" value="<%= req.user.email %>">
+                                                </div>
+                                            </div>
+                                            <!--end col-->
+                                            <div class="col-lg-6">
+                                                <div class="mb-2">
+                                                    <label for="designationInput" class="form-label">API</label>
+                                                    <div class="input-group">
+                                                        <input type="text" class="form-control" aria-label="Recipient's username" 
+                                                        value="http://localhost:3000/contact/api/create?id=<%= req.user.api_key %>"id="myInput"
+                                                        aria-describedby="button-addon2">
+                                                        <button class="btn btn-outline-success" type="button" onclick="myFunction()">Copy</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- cập nhật data use_profile -->
+                                            <div class="col-lg-12">
+                                                <div class="hstack gap-2 justify-content-end">
+                                                    <button type="submit" class="btn btn-secondary">Cập Nhật</button> 
+                                                </div>
+                                            </div>
+                                            <!--end col-->
+                                        </div>
+                                        <!--end row-->
+                                    </form>
+                            </div>
+
+                            <!--end tab-pane-->
+                            <div class="tab-pane <%= req.query.tab && req.query.tab==='password' ? 'active' : '' %>" id="changePassword" role="tabpanel">
+                                <%- include('../../partials/alert.ejs') %>
+                                    <form action="/auth/password_profile" method="post">
+                                        <div class="">
+                                            <div class="col-lg-4">
+                                                <label class="form-label" for="password-input">Mật khẩu cũ</label>
+                                                <span class="text-danger">*</span>
+                                                <div class="position-relative auth-pass-inputgroup">
+                                                    <input type="password" class="form-control pe-5" placeholder="Nhập mật khẩu" id="password-input" name="password" required>
+                                                        <button class="btn btn-link position-absolute end-0 top-0 text-decoration-none text-muted" type="button" id="password-addon">
+                                                <i class="ri-eye-fill align-middle"></i></button>
+                                                </div>
+                                            </div>
+                                            <br>
+                                            <!--end col-->
+                                            <div class="col-lg-4">
+                                                <label class="form-label" for="password-input">Mật khẩu mới</label>
+                                                <span class="text-danger">*</span>
+                                                <div class="position-relative auth-pass-inputgroup">
+                                                    <input type="password" class="form-control pe-5 password-input" onpaste="return false" placeholder="Nhập mật khẩu mới" id="password-input" aria-describedby="passwordInput" name="new_password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" required>
+                                                    <button class="btn btn-link position-absolute end-0 top-0 text-decoration-none text-muted password-addon" type="button" id="password-addon"><i
+                                                        class="ri-eye-fill align-middle"></i></button>
+
+                                                </div>
+                                                <div id="password-contain" class="p-3 bg-light mb-2 rounded">
+                                                    <h5 class="fs-13">Mật khẩu cần phải có:</h5>
+                                                    <p id="pass-length" class="invalid fs-12 mb-2">Ít nhất <b>8 ký tự</b></p>
+                                                    <p id="pass-lower" class="invalid fs-12 mb-2">Có ít nhất 1 <b>Chữ Thường</b>(a-z)
+                                                    </p>
+                                                    <p id="pass-upper" class="invalid fs-12 mb-2">Có ít nhất 1 <b>Chữ hoa</b>(A-Z)</p>
+                                                    <p id="pass-number" class="invalid fs-12 mb-0">Có ít nhất 1 <b>Số</b> (0-9)</p>
+                                                </div>
+                                            </div>
+                                            <br>
+
+                                            <!--end col-->
+                                            <div class="col-lg-4">
+                                                <label class="form-label" for="password-input">Xác nhận mật khẩu mới</label>
+                                                <span class="text-danger">*</span>
+                                                <div class="position-relative auth-pass-inputgroup">
+                                                    <input type="password" class="form-control pe-5 password-input" onpaste="return false" placeholder="Xác nhận mật khẩu mới" id="password-input" aria-describedby="passwordInput" name="confirm_password" required>
+                                                    <button class="btn btn-link position-absolute end-0 top-0 text-decoration-none text-muted password-addon" type="button" id="password-addon"><i
+                                                        class="ri-eye-fill align-middle"></i></button>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-12">
+                                                <div class="text-end">
+                                                    <button type="submit" class="btn btn-secondary">
+                                                    Đổi mật khẩu</button>
+                                                </div>
+                                            </div>
+                                            <!--end col-->
+                                        </div>
+                                        <!--end row-->
+                                    </form>
+
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+                <!--end col-->
+            </div>
+            <!--end row-->
+
+            <%- contentFor('FooterJs') %>
+
+                <!-- App js -->
+                <!-- particles js -->
+                <script src="../../assets/libs/particles.js/particles.js"></script>
+                <!-- particles app js -->
+                <script src="../../assets/js/pages/particles.app.js"></script>
+                <!-- password-addon init -->
+                <script src="../../assets/js/pages/password-addon.init.js"></script>
+                <!-- password-addon init -->
+                <script src="../../assets/js/pages/passowrd-create.init.js"></script>
+                <!-- Hàm copy API -->
+                <script src="../../assets/js/copy.js"></script>
+                <!-- End hàm copy API -->

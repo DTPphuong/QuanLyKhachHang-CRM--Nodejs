@@ -1,0 +1,27 @@
+<div class="modal fade zoomIn" id="linkAPI" tabindex="-1" aria-hidden="true">
+<div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="linkAPI">Đường Dẫn Tạo API Khách Hàng</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <label class="form-label">Link:</label>
+            <input class="form-control" type="text"
+            value="http://localhost:3000/contact/api/create?id=<%= req.user.api_key %>" id="myInput">
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+            <button class="btn btn-success add-btn" onclick="myFunction()" onmouseout="outFunc()">
+                <span class="tooltiptext" id="myTooltip"></span>Copy</button>
+        </div>
+    </div>
+</div>
+</div>
+<script>
+    function myFunction() {
+      var copyText = document.getElementById("myInput");
+      copyText.select();
+      document.execCommand("copy");
+    }
+    </script>

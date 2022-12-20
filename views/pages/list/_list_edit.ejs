@@ -1,0 +1,55 @@
+<!-- Right offcanvas -->
+<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvas_list_edit_<%=list.id%>" aria-labelledby="offcanvasRightLabel">
+    <div class="offcanvas-header border-bottom">
+        <h5 class="offcanvas-title text-muted text-uppercase" id="offcanvasRightLabel">Sửa thông tin nhóm khách</h5>
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <!-- =========FORM======== -->
+    <form action="/list/detail/<%=list.id%>/edit" method="post">
+        <div class="offcanvas-body p-0 overflow-hidden">
+            <div data-simplebar style="height: calc(100vh - 150px);">
+                <div class="acitivity-timeline p-4">
+                    <div class="row g-3">
+                        <div class="col-lg-12">
+                            <div>
+                                <label for="full_name" class="form-label">
+                                    Tên nhóm khách hàng</label>
+                                <input type="text" id="full_name" name="full_name" value="<%= list.full_name %>" class="form-control" required />
+                            </div>
+                        </div>
+                        <!--end col-->
+                        <div class="mb-4">
+                            <label for="parent_id" class="form-label">Nhóm</label>
+                            <select class="form-control" name="parent">
+                                <option class="text-center" value="0">-- chọn nhóm cha --</option> 
+                                <% listsFinals.forEach(i=> {%> 
+                                    
+                                    <% if(i.id !== list.id){%>
+                                        <option class="parent" value="<%= i.id %>"
+                                            <%=parseInt(i.id)===parseInt(list.parent_id) ? 'selected' : '' %>>
+                                            <%= i.full_name %>
+                                        </option>
+                                        <%}else{%>
+                                            <option class="parent" value="<%= i.id %>" disabled
+                                                <%=parseInt(i.id)===parseInt(list.parent_id) ? 'selected' : '' %>>
+                                                <%= i.full_name %>
+                                            </option>
+                                            <%}%>
+                                            
+                                    <%}); %>
+                            </select>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <div class="hstack gap-2 justify-content-end">
+                <button type="submit" class="btn btn-success" id="add-btn">Cập nhật</button>
+            </div>
+        </div>
+    </form>
+</div>
+<!--end offcanva -->

@@ -1,0 +1,57 @@
+<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvas_company_edit_<%=company.id%>"
+    aria-labelledby="offcanvasRightLabel">
+    <div class="offcanvas-header border-bottom">
+        <h5 class="offcanvas-title text-muted text-uppercase" id="offcanvasRightLabel">Sửa thông tin doanh nghiệp</h5>
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <form action="/company/detail/<%=company.id %>/update" method="post">
+        <div class="offcanvas-body p-0 overflow-hidden">
+            <div data-simplebar style="height: calc(100vh - 150px);">
+                <div class="acitivity-timeline p-4">
+                    <div class="row g-3">
+                        <div class="col-lg-12">
+                            <div>
+                                <label for="full_name" class="form-label">Tên Doanh Nghiệp <span class="text-danger">*</span></label>
+                                <input type="text" id="full_name" name="full_name" value="<%= company.full_name %>"
+                                    class="form-control" required />
+                            </div>
+                        </div>
+                        <div class="col-lg-12">
+                            <div>
+                                <label for="tax" class="form-label">Mã Số Thuế <span class="text-danger">*</span></label>
+                                <input type="number" id="tax" name="tax" value="<%= company.tax %>"
+                                    class="form-control" required />
+                            </div>
+                        </div>
+                        <div class="col-lg-12">
+                            <div>
+                                <label for="mobile" class="form-label">Số điện thoại <span class="text-danger">*</span> </label>
+                                <input type="number" id="mobile" name="mobile" value="<%= company.mobile %>"
+                                    class="form-control" required />
+                            </div>
+                        </div>
+                        <div class="col-lg-12">
+                            <div>
+                                <label for="address" class="form-label">Địa Chỉ</label>
+                                <input type="text" id="address" name="address" value="<%= company.address %>"
+                                    class="form-control" />
+                            </div>
+                        </div>
+                        <div class="col-lg-12">
+                            <div>
+                                <label for="email" class="form-label">Email</label>
+                                <input type="email" id="email" name="email" value="<%= company.email %>"
+                                    class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <div class="hstack gap-2 justify-content-end">
+                <button type="submit" class="btn btn-secondary" id="add-btn"> Cập nhật </button>
+            </div>
+        </div>
+    </form>
+</div>

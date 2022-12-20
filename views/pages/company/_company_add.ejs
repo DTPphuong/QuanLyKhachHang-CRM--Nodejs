@@ -1,0 +1,70 @@
+<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvas_company_add" aria-labelledby="offcanvas_company_add">
+    <div class="offcanvas-header border-bottom">
+        <h5 class="offcanvas-title text-muted text-uppercase" id="offcanvas_company_add">Thêm Doanh Nghiệp</h5>
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <form action="/company/addCompany" method="post">
+        <div class="offcanvas-body p-0 overflow-hidden">
+            <div data-simplebar style="height: calc(100vh - 150px);">
+                <div class="acitivity-timeline p-4">
+                    <div class="row g-3">
+                        <div class="col-lg-12">
+                            <div class="mb-2">
+                                <label for="full_name" class="form-label">Tên Doanh Nghiệp <span class="text-danger">*</span></label>
+                                <input type="text" id="full_name" name="full_name" class="form-control"
+                                    placeholder="Nhập Tên Doang nghiệp" required />
+                            </div>
+                            <div class="mb-2">
+                                <label for="tax" class="form-label"> Mã Số Thuế <span class="text-danger">*</span></label>
+                                <input type="number" id="tax" name="tax" class="form-control"
+                                    placeholder="Nhập Mã Số Thuế" required />
+                            </div>
+                            <div class="mb-2">
+                                <label for="mobile" class="form-label">Số Điện Thoại <span class="text-danger">*</span></label>
+                                <input type="number" id="mobile" name="mobile" class="form-control"
+                                    placeholder="Nhập số điện thoại" required />
+                            </div>
+                            <div class="mb-2">
+                                <label for="address" class="form-label">Địa Chỉ</label>
+                                <input type="text" id="address" name="address" class="form-control"
+                                    placeholder="Nhập địa chỉ công ty" />
+                            </div>
+                            <div class="mb-2">
+                                <label for="email" class="form-label">Email</label>
+                                <input type="email" id="email" name="email" class="form-control"
+                                    placeholder="Nhập email" />
+                            </div>
+                            <div class="mb-2">
+                                <label for="job_id" class="form-label">Ngành Nghề</label>
+                                <select class="form-control" name="job_id" id="job_id">
+                                    <option class="text-center" value="0" selected disabled>-- Chọn ngành nghề --</option>
+                                    <% jobs.forEach(i=> {%>
+                                        <option value="<%=i.id%>">
+                                            <%= i.full_name%>
+                                        </option>
+                                        <%});%>
+                                </select>
+                            </div>
+                            <div class="mb-2">
+                                <label for="contact_id" class="form-label">Khách Hàng</label>
+                                <select class="form-control" name="contact_id" id="contact_id">
+                                    <option class="text-center" value="0" selected disabled>-- Chọn khách hàng --</option>
+                                    <% contacts.rows.forEach(i=> {%>
+                                        <option value="<%=i.id%>">
+                                            <%= i.full_name%>
+                                        </option>
+                                        <%});%>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <div class="hstack gap-2 justify-content-end">
+                <button type="submit" class="btn btn-success" id="add-btn">Thêm</button>
+            </div>
+        </div>
+    </form>
+</div>

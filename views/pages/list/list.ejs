@@ -1,0 +1,91 @@
+<%- contentFor('HeaderCss') %>
+    <link href="../../assets/libs/sweetalert2/sweetalert2.min.css" rel="stylesheet" type="text/css" />
+    <%- contentFor('body') %>
+        <div class="row" style="justify-content: center;">
+            <div class="col-lg-12">
+                <div class="card" id="leadsList">
+                    <div class="card-header">
+                        <div class="row g-3">
+                            <form class="row g-3" action="/list/search" method="post">
+                                <div class="col-md-4">
+                                    <div class="search-box">
+                                        <input name="key" type="text" class="form-control" value="<%= req.query.key ? req.query.key : '' %>" placeholder="Tìm kiếm..." />
+                                        <i class="ri-search-line search-icon"></i>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <button type="submit" class="btn btn-outline-success btn-border">Tìm kiếm</button>
+                                </div>
+                                <div class="col-md-auto ms-auto">
+                                    <div class="flex-shrink-0">
+                                        <a class="btn btn-success add-btn" type="button" data-bs-toggle="offcanvas" id="create-btn" data-bs-target="#offcanvas_list_add" aria-controls="offcanvas_list_them">
+                                            <i class="ri-add-line align-bottom me-1"></i>Thêm nhóm khách hàng
+                                        </a>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div>
+                            <%- include('../../partials/alert.ejs') %>
+                                <div class="table-responsive table-card">
+                                    <table class="table align-middle" id="customerTable">
+                                        <thead class="table-light">
+                                            <tr class="col-lg-12">
+                                                <th class="col-sm-6">Tên Nhóm Khách Hàng</th>
+                                                <th class="col-lg-4">Ngày Tạo</th>
+                                                <th class="col-sm-2 text-center">Hành Động</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="list form-check-all">
+                                            <% listsFinal.forEach(i=> {%>
+                                                <tr>
+                                                    <td>
+                                                        <%= i.full_name %>
+                                                    </td>
+                                                    <td>
+                                                        <%= moment(i.created_date).format("DD/MM/YYYY") %>
+                                                    </td>
+                                                    <td>
+                                                        <ul class="list-inline hstack gap-2 mb-0" style="justify-content: center;">
+                                                            <% if(!(i.full_name==="Khách hàng thuộc API")){%>
+                                                            <li class="list-inline-item" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top" title="Sửa">
+                                                                    <a class="edit-item-btn" href="#offcanvas_list_edit_<%=i.id%>" data-bs-toggle="offcanvas" value="<%= i.id %>">
+                                                                        <i class="ri-pencil-fill align-bottom text-muted"></i>
+                                                                    </a>
+                                                            </li>
+                                                            <li class="list-inline-item" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top" title="Xóa">
+                                                                    <a class="remove-item-btn" data-bs-toggle="modal" value="<%= i.id %>" href="#offcanvas_list_delete_<%=i.id%>">
+                                                                        <i class="ri-delete-bin-fill align-bottom text-muted"> </i>
+                                                                    </a>
+                                                            </li>
+                                                            <%}%>
+                                                        </ul>
+                                                    </td>
+                                                </tr>
+                                                <%}); %>
+                                        </tbody>
+                                    </table>
+                                </div>
+                        </div>
+                    </div>
+                    <!-- offcanvas-add -->
+                    <%- include('_list_add') %>
+                    <!-- offcanvas-delect -->
+                    <% lists.forEach(i=> {%>
+                        <%- include('_list_delete', {list: i}) %>
+                    <%}) %>
+                    <!-- offcanvas-edit -->
+                    <% lists.forEach(i=> {%>
+                        <%- include('_list_edit', {list: i}) %>
+                    <%}) %>
+                </div>
+            </div>
+        </div>
+
+        <%- contentFor('FooterJs') %>
+            <script src="../../assets/libs/sweetalert2/sweetalert2.min.js"></script>
+            <script src="../../assets/libs/list.js/list.min.js"></script>
+            <script src="../../assets/libs/list.pagination.js/list.pagination.min.js"></script>
+            <script src="../../assets/js/pages/crm-leads.init.js"></script>

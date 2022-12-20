@@ -1,0 +1,43 @@
+<!-- Right offcanvas -->
+<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvas_list_add" aria-labelledby="offcanvas_list_add">
+    <div class="offcanvas-header border-bottom">
+        <h5 class="offcanvas-title text-muted text-uppercase" id="offcanvas_list_add">Thêm nhóm khách hàng</h5>
+    </div>
+    <!-- ===========FORM========== -->
+    <form action="/list/list" method="post">
+        <div class="offcanvas-body p-0 overflow-hidden">
+            <div data-simplebar style="height: calc(100vh - 150px);">
+                <div class="acitivity-timeline p-4">
+                    <div class="row g-3">
+                        <div class="col-lg-12">
+                            <div>
+                                <label for="full_name" class="form-label">
+                                    Tên nhóm khách hàng</label>
+                                <input type="text" id="full_name" name="full_name" class="form-control" placeholder="Nhập tên khách hàng" required />
+                            </div>
+                        </div>
+                        <!--end col-->
+                        <div class="mb-4">
+                            <label for="parent_id" class="form-label">Nhóm</label>
+                            <select class="form-control" name="parent_id" id="parent_id">
+                                <option class="text-center" value="0" selected disabled >-- chọn nhóm cha --</option>
+                                <% listsFinals.forEach(i=> {%>
+                                    <option value="<%= i.id %>" <%=parseInt(i.id)===parseInt(lists.parent_id)
+                                        ? 'selected' : '' %> ><%= i.full_name %>
+                                    </option>
+                                    <%}); %>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <div class="hstack gap-2 justify-content-end">
+                <button type="button" class="btn btn-light" data-bs-dismiss="offcanvas">Thoát</button>
+                <button type="submit" class="btn btn-success" id="add-btn">Thêm</button>
+            </div>
+        </div>
+    </form>
+</div>
+<!--end offcanva -->

@@ -1,0 +1,42 @@
+<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvas_edit_contact_<%=company.id%>_<%=contactCompany.id%>"
+    aria-labelledby="offcanvasRightLabel">
+    <div class="offcanvas-header border-bottom">
+        <h6 class="offcanvas-title text-muted text-uppercase" id="offcanvasRightLabel">Sửa Khách Hàng</h5>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <form action="/company/detail/<%=company.id%>/<%=contactCompany.id%>/edit_contact" method="post">
+        <div class="offcanvas-body p-0 overflow-hidden">
+            <div data-simplebar style="height: calc(100vh - 150px);">
+                <div class="modal-body">
+                    <input type="hidden" id="id-field" />   
+                    <div class="row g-3">
+                        <div class="mb-2">
+                            <label for="contact_id" class="form-label">Khách hàng <span class="text-danger">*</span></label>
+                            <select class="form-control" name="contact_id" id="contact_id" required>
+                                <option class="text-center" value="0" selected disabled>-- Chọn khách hàng --</option>
+                                <% contacts.rows.forEach(i=>{%>
+                                    <!-- nếu contact nào đã được thêm vào thì disbled ngược lại hiển thị ra có thể chọn -->
+                                    <% const ex = company.contact_company.find(f=>f.contact_id === i.id)%>
+                                        <% if(!ex){%>
+                                                <option value="<%= i.id %>">
+                                                    <%= i.full_name %>
+                                                </option>
+                                            <%}else{%>
+                                                <option value="<%= i.id %>" selected disabled>
+                                                    <%= i.full_name %>
+                                                </option>
+                                        <%} %>
+                                <%}); %> 
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <div class="hstack gap-2 justify-content-end">
+                <button type="submit" class="btn btn-success" id="add-btn">Sửa</button>
+            </div>
+        </div>
+    </form>
+</div>

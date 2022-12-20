@@ -1,0 +1,43 @@
+<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvas_add_companyJob_<%=company.id%>"
+    aria-labelledby="offcanvasRightLabel">
+    <div class="offcanvas-header border-bottom">
+        <h6 class="offcanvas-title text-muted text-uppercase" id="offcanvasRightLabel">Thêm Ngành Nghề</h5>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <form action="/company/detail/<%=company.id %>/add_companyJob" method="post">
+        <div class="offcanvas-body p-0 overflow-hidden">
+            <div data-simplebar style="height: calc(100vh - 150px);">
+                <div class="modal-body">
+                    <input type="hidden" id="id-field" />
+                    <div class="row g-3">
+                        <div class="mb-2">
+                            <label for="job_id" class="form-label">Ngành nghề <span
+                                    class="text-danger">*</span></label>
+                            <select class="form-control" name="job_id" id="job_id">
+                                <option class="text-center" value="0" selected disabled>-- Chọn ngành nghề --</option>
+                                <% jobs.forEach(i=>{%>
+                                    <!-- nếu job nào đã được thêm vào thì disbled ngược lại hiển thị ra có thể chọn -->
+                                    <% const ex = company.companyJobs.find(f=>f.job_id === i.id)%>
+                                        <% if(!ex){%>
+                                                <option value="<%= i.id %>">
+                                                    <%= i.full_name %>
+                                                </option>
+                                            <%}else{%>
+                                                <option value="<%= i.id %>" disabled>
+                                                    <%= i.full_name %>
+                                                </option>
+                                        <%} %>
+                                <%}); %> 
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <div class="hstack gap-2 justify-content-end">
+                <button type="submit" class="btn btn-success" id="add-btn">Thêm</button>
+            </div>
+        </div>
+    </form>
+</div>

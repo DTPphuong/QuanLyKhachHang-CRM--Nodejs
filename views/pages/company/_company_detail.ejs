@@ -1,0 +1,127 @@
+<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvas_company_detail_<%=company.id%>" style="width: 600px;"
+  aria-labelledby="offcanvasRightLabel">
+  <div class="offcanvas-header border-bottom">
+    <h5 class="offcanvas-title text-muted text-uppercase" id="offcanvasRightLabel">Thông Tin Chi Tiết Doanh Nghiệp</h5>
+    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body p-0 overflow-hidden">
+    <div data-simplebar style="height: calc(100vh - 150px);">
+      <div class="acitivity-timeline p-4">
+        <div class="table-responsive table-card">
+          <table class="table table-borderless">
+            <tbody>
+              <tr>
+                <td class="fw-medium">Doanh Nghiệp:</td>
+                <td>
+                  <h5><%= company.full_name %></h5>
+                </td>
+              </tr>
+              <tr>
+                <td class="fw-medium">Mã Số Thuế:</td>
+                <td>
+                  <%= company.tax %>
+                </td>
+              </tr>
+              <tr>
+                <td class="fw-medium">Số Điện Thoại:</td>
+                <td>
+                  <%= company.mobile %>
+                </td>
+              </tr>
+              <tr>
+                <td class="fw-medium">Địa Chỉ:</td>
+                <td>
+                  <%= company.address %>
+                </td>
+              </tr>
+              <tr>
+                <td class="fw-medium">Email:</td>
+                <td>
+                  <%= company.email %>
+                </td>
+              </tr>
+              <tr>
+                <td class="fw-medium">Ngày Tạo:</td>
+                <td>
+                  <%= moment(company.created_date).format("DD/MM/YYYY | hh:mm") %>
+                </td>
+              </tr>
+              <tr>
+                <td class="fw-medium">***************</td>
+              </tr>
+              <tr>
+                <td class="fw-medium">Ngành Nghề:</td>
+                <td>
+                  <%company.companyJobs.forEach(j=> {%>
+                    <span type="button" id="dropdownMenuLink1" data-bs-toggle="dropdown" aria-expanded="false"
+                      class="badge badge-outline-dark jobs btn-border btn flex-wrap" style="font-size: 13px;border: 0.1px solid rgb(206, 201, 201);
+                                            margin: 1px 2px; padding: 8px;">
+                      <%=j.jobs.full_name%>
+                    </span>
+                    <!-- nút sửa job_company -->
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink1">
+                      <li>
+                        <a type="button" data-bs-toggle="offcanvas" class="dropdown-item"
+                          href="#offcanvas_edit_companyJob_<%=company.id%>_<%=j.id%>"><span>
+                            <i class="ri-pencil-fill align-bottom me-2 text-muted"></i> </span>Sửa</a>
+                      </li>
+                      <!-- nút delete job_company -->
+                      <li>
+                        <a type="button" data-bs-toggle="modal" id="delete-record" class="dropdown-item"
+                          href="#offcanvas_delete_companyJob_<%=j.id%>"><span>
+                            <i class="ri-delete-bin-fill align-bottom me-2 text-muted"></i> </span>Xóa</a>
+                      </li>
+                    </ul>
+                    <%});%>
+                      <!-- nút thêm job_company -->
+                      <button type="button" class="btn btn-light position-relative p-0 avatar-xs rounded-circle"
+                        id="create-btn" data-bs-toggle="offcanvas" href="#offcanvas_add_companyJob_<%=company.id%>">
+                        <span class="avatar-title bg-transparent text-reset">
+                          <i class="ri-add-line align-bottom me-0"></i>
+                        </span>
+                      </button>
+                </td>
+              </tr>
+              <tr>
+                <td class="fw-medium">***************</td>
+              </tr>
+              <tr>
+                <td class="fw-medium">Khách Hàng:</td>
+                <td colspan="6">
+                  <%company.contact_company.forEach(jj=> {%>
+                    <span type="button" id="dropdownMenuLink1" data-bs-toggle="dropdown" aria-expanded="false"
+                      class="badge bg-danger list btn-border btn flex-wrap"
+                      style="font-size: 13px; margin: 1px 1px; padding: 8px;">
+                      <%=jj.contact.full_name%>
+                    </span>
+                    <!-- nút sửa contact -->
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink1">
+                      <li>
+                        <a type="button" data-bs-toggle="offcanvas" class="dropdown-item"
+                          href="#offcanvas_edit_contact_<%=company.id%>_<%=jj.id%>"><span>
+                            <i class="ri-pencil-fill align-bottom me-2 text-muted"></i> </span>Sửa</a>
+                      </li>
+                      <!-- nút delete contact -->
+                      <li>
+                        <a type="button" data-bs-toggle="modal" id="delete-record" class="dropdown-item"
+                          href="#offcanvas_delete_contact_<%=jj.id%>"><span>
+                            <i class="ri-delete-bin-fill align-bottom me-2 text-muted"></i> </span>Xóa</a>
+                      </li>
+                    </ul>
+                    <%});%>
+                      <!-- nút thêm contact -->
+                      <button type="button" class="btn btn-light position-relative p-0 avatar-xs rounded-circle"
+                        id="create-btn" data-bs-toggle="offcanvas" href="#offcanvas_add_contact_<%=company.id%>">
+                        <span class="avatar-title bg-transparent text-reset">
+                          <i class="ri-add-line align-bottom me-0"></i>
+                        </span>
+                      </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
